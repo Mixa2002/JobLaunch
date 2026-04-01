@@ -7,6 +7,7 @@ import type { UserProfileFormState } from '@/lib/types/profile';
 import type { JobListing, TailoredCV } from '@/lib/types/job';
 import { Header } from '@/components/layout/Header';
 import { StepProgress } from '@/components/StepProgress';
+import { UploadStep } from '@/components/steps/UploadStep';
 import type { TranslationKey } from '@/lib/i18n';
 
 const TOTAL_STEPS = 5;
@@ -83,17 +84,24 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Placeholder step content */}
-          <div className="rounded-2xl border border-border bg-white p-6 sm:p-10 min-h-[300px] flex flex-col items-center justify-center text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-electric/10 text-electric mb-4">
-              <span className="text-2xl font-heading font-bold">{currentStep + 1}</span>
+          {/* Step content */}
+          {currentStep === 0 ? (
+            <UploadStep
+              onComplete={(parsedProfile) => setProfile(parsedProfile)}
+              goNext={goNext}
+            />
+          ) : (
+            <div className="rounded-2xl border border-border bg-white p-6 sm:p-10 min-h-[300px] flex flex-col items-center justify-center text-center">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-electric/10 text-electric mb-4">
+                <span className="text-2xl font-heading font-bold">{currentStep + 1}</span>
+              </div>
+              <p className="text-base text-muted max-w-md">
+                {language === 'sr'
+                  ? 'Sadrzaj ovog koraka bice uskoro dostupan.'
+                  : 'This step\'s content is coming soon.'}
+              </p>
             </div>
-            <p className="text-base text-muted max-w-md">
-              {language === 'sr'
-                ? 'Sadrzaj ovog koraka bice uskoro dostupan.'
-                : 'This step\'s content is coming soon.'}
-            </p>
-          </div>
+          )}
 
           {/* Navigation buttons */}
           <div className="mt-6 flex items-center justify-between">
