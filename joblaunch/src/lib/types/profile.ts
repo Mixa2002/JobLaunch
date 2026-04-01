@@ -20,7 +20,7 @@ export interface Education {
   thesisTopic: string;
 }
 
-export interface Language {
+export interface LanguageSkill {
   name: string;
   level: string;
 }
@@ -28,7 +28,7 @@ export interface Language {
 export interface Skills {
   hardSkills: string[];
   softSkills: string[];
-  languages: Language[];
+  languages: LanguageSkill[];
   certifications: string[];
 }
 
@@ -70,6 +70,11 @@ export interface SerbiaSpecific {
   driverLicense: string;
 }
 
+/**
+ * UserProfile represents the serializable profile data that flows between
+ * the frontend and n8n webhooks. It does NOT include the raw File object
+ * since that cannot be serialized to JSON.
+ */
 export interface UserProfile {
   personal: PersonalInfo;
   education: Education;
@@ -78,10 +83,17 @@ export interface UserProfile {
   preferences: Preferences;
   serbiaSpecific: SerbiaSpecific;
   rawCvText: string;
+}
+
+/**
+ * Client-side state that extends UserProfile with the uploaded File reference.
+ * Use this in React components/state; use UserProfile for API contracts.
+ */
+export interface UserProfileFormState extends UserProfile {
   rawCvFile: File | null;
 }
 
-export function createEmptyProfile(): UserProfile {
+export function createEmptyProfile(): UserProfileFormState {
   return {
     personal: {
       firstName: '',

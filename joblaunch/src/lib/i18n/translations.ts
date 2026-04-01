@@ -371,7 +371,7 @@ export const translations = {
     en: 'Onsite',
   },
   workRemote: {
-    sr: 'Daljinski',
+    sr: 'Rad od kuće',
     en: 'Remote',
   },
   workHybrid: {

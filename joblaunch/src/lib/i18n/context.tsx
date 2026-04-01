@@ -19,18 +19,25 @@ interface I18nContextValue {
 const I18nContext = createContext<I18nContextValue | null>(null);
 
 const STORAGE_KEY = 'joblaunch-language';
+const DEFAULT_LANGUAGE: Language = 'sr';
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<Language>('sr');
-  const [mounted, setMounted] = useState(false);
+  // Initialize with the default language so SSR and first client render match.
+  // This avoids returning null (blank flash) while still preventing hydration mismatch.
+  const [language, setLanguageState] = useState<Language>(DEFAULT_LANGUAGE);
 
   useEffect(() => {
+    // After mount, read the stored preference and update if different.
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored === 'en' || stored === 'sr') {
       setLanguageState(stored);
     }
-    setMounted(true);
   }, []);
+
+  // Keep the <html lang> attribute in sync with the current language.
+  useEffect(() => {
+    document.documentElement.lang = language;
+  }, [language]);
 
   const setLanguage = useCallback((lang: Language) => {
     setLanguageState(lang);
@@ -43,11 +50,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     },
     [language]
   );
-
-  // Avoid hydration mismatch by rendering nothing until mounted
-  if (!mounted) {
-    return null;
-  }
 
   return (
     <I18nContext.Provider value={{ language, setLanguage, t }}>

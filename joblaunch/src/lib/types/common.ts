@@ -18,6 +18,20 @@ export enum WorkMode {
   Hybrid = 'hybrid',
 }
 
+/**
+ * Tracks the status of a tailored CV generation job.
+ * Maps directly to the tailorStatus* translation keys.
+ */
+export enum TailorStatus {
+  Queued = 'queued',
+  Analyzing = 'analyzing',
+  Extracting = 'extracting',
+  Tailoring = 'tailoring',
+  Generating = 'generating',
+  Ready = 'ready',
+  Error = 'error',
+}
+
 export const SERBIAN_CITIES = [
   'Beograd',
   'Novi Sad',

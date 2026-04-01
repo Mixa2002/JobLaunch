@@ -1,3 +1,10 @@
+import { EmploymentType } from './common';
+import type { UserProfile } from './profile';
+
+// ---------------------------------------------------------------------------
+// Fit Score
+// ---------------------------------------------------------------------------
+
 export interface FitScoreBreakdown {
   skills: number;
   education: number;
@@ -12,23 +19,31 @@ export interface FitScore {
   breakdown: FitScoreBreakdown;
 }
 
+// ---------------------------------------------------------------------------
+// Job Listing
+// ---------------------------------------------------------------------------
+
 export interface JobListing {
   id: string;
   title: string;
   company: string;
   location: string;
   salary: string;
-  type: string;
+  type: EmploymentType | string; // enum when we can parse it, raw string otherwise
   snippet: string;
   fullDescription: string;
   link: string;
   source: string;
   postedDate: string;
-  fitScore: FitScore;
+  fitScore?: FitScore; // optional: may not be present before scoring
   matchedSkills: string[];
   missingSkills: string[];
   extractedKeywords: string[];
 }
+
+// ---------------------------------------------------------------------------
+// Keyword Report & Tailored CV
+// ---------------------------------------------------------------------------
 
 export interface KeywordReportEntry {
   keyword: string;
@@ -46,7 +61,61 @@ export interface TailoredCV {
   jobId: string;
   jobTitle: string;
   company: string;
-  pdfUrl: string;
-  docxUrl: string;
+  /** Base64-encoded PDF content returned by the tailor-cv webhook */
+  pdfBase64: string;
+  /** Base64-encoded DOCX content returned by the tailor-cv webhook */
+  docxBase64: string;
   keywordReport: KeywordReport;
+}
+
+// ---------------------------------------------------------------------------
+// n8n Webhook API Contracts
+// ---------------------------------------------------------------------------
+
+/** POST /webhook/parse-cv — multipart/form-data with the CV file */
+export interface ParseCvResponse {
+  profile: UserProfile;
+}
+
+/** POST /webhook/search-jobs */
+export interface SearchJobsRequest {
+  profile: UserProfile;
+  filters: {
+    targetCity: string;
+    searchRadius: string;
+    employmentType: EmploymentType | '';
+    workMode: string;
+  };
+}
+
+export interface SearchJobsResponse {
+  jobs: JobListing[];
+  totalFound: number;
+}
+
+/** POST /webhook/fetch-job-details */
+export interface FetchJobDetailsRequest {
+  jobUrl: string;
+}
+
+export interface FetchJobDetailsResponse {
+  fullDescription: string;
+  extractedKeywords: string[];
+}
+
+/** POST /webhook/tailor-cv */
+export interface TailorCvRequest {
+  profile: UserProfile;
+  rawCvText: string;
+  job: JobListing;
+}
+
+export interface TailorCvResponse {
+  tailoredCv: TailoredCV;
+}
+
+/** GET /webhook/health */
+export interface HealthCheckResponse {
+  status: 'ok' | 'error';
+  version?: string;
 }
