@@ -11,12 +11,12 @@ export function LanguageToggle() {
       role="switch"
       aria-checked={language === 'en'}
       onClick={() => setLanguage(language === 'sr' ? 'en' : 'sr')}
-      className="flex items-center gap-1 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium transition-colors hover:bg-gray-100"
+      className="flex items-center gap-1.5 rounded-lg border border-border px-3.5 py-2.5 text-sm font-medium transition-colors hover:bg-border-light min-h-[44px] min-w-[44px]"
       aria-label={language === 'sr' ? 'Switch to English' : 'Prebaci na srpski'}
     >
-      <span aria-hidden="true" className={language === 'sr' ? 'font-bold' : 'text-gray-400'}>SR</span>
-      <span aria-hidden="true" className="text-gray-300">/</span>
-      <span aria-hidden="true" className={language === 'en' ? 'font-bold' : 'text-gray-400'}>EN</span>
+      <span aria-hidden="true" className={language === 'sr' ? 'font-bold text-navy' : 'text-muted'}>SR</span>
+      <span aria-hidden="true" className="text-border">|</span>
+      <span aria-hidden="true" className={language === 'en' ? 'font-bold text-navy' : 'text-muted'}>EN</span>
     </button>
   );
 }
